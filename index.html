@@ -1,89 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>NOVA AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: white;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA AI</title>
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 40px 20px;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    h1 {
-      font-size: 48px;
-      margin-bottom: 5px;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #080b12;
+  color: white;
+}
 
-    p {
-      color: #aab3c5;
-    }
+.container {
+  max-width: 650px;
+  margin: auto;
+  min-height: 100vh;
+  padding: 25px 18px;
+}
 
-    .chat {
-      margin-top: 30px;
-      background: #151c30;
-      padding: 20px;
-      border-radius: 20px;
-    }
+.logo {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  margin-top: 30px;
+}
 
-    input {
-      width: 70%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-    }
+.subtitle {
+  text-align: center;
+  color: #9ca3af;
+  margin-bottom: 30px;
+}
 
-    button {
-      padding: 14px 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
+.chat {
+  min-height: 420px;
+  background: #111827;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 15px;
+  overflow-y: auto;
+}
 
-    #reply {
-      margin-top: 20px;
-      color: #dce4ff;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container">
-    <h1>🌌 NOVA</h1>
-    <p>Your personal AI assistant</p>
-
-    <div class="chat">
-      <input id="message" placeholder="Ask NOVA anything...">
-      <button onclick="talk()">Send</button>
-
-      <div id="reply"></div>
-    </div>
-  </div>
-
-  <script>
-    function talk() {
-      const message = document.getElementById("message").value;
-      const reply = document.getElementById("reply");
-
-      if (!message) {
-        reply.innerText = "Ask me something 😎";
-        return;
-      }
-
-      reply.innerText =
-        "NOVA: I'm still learning, but soon I'll be able to answer you! 🚀";
-    }
-  </script>
-
-</body>
-</html>
+.message {
+  padding: 12px 
