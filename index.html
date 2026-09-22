@@ -1,50 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NOVA AI</title>
+  <title>NOVA AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>🤖 NOVA AI</h1>
+  <p>Your AI assistant is coming online...</p>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <input id="message" placeholder="Ask NOVA anything">
+  <button onclick="send()">Send</button>
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #080b12;
-  color: white;
-}
+  <p id="reply"></p>
 
-.container {
-  max-width: 650px;
-  margin: auto;
-  min-height: 100vh;
-  padding: 25px 18px;
-}
-
-.logo {
-  text-align: center;
-  font-size: 42px;
-  font-weight: bold;
-  margin-top: 30px;
-}
-
-.subtitle {
-  text-align: center;
-  color: #9ca3af;
-  margin-bottom: 30px;
-}
-
-.chat {
-  min-height: 420px;
-  background: #111827;
-  border-radius: 18px;
-  padding: 18px;
-  margin-bottom: 15px;
-  overflow-y: auto;
-}
-
-.message {
-  padding: 12px 
+  <script>
+    function send() {
+      const message = document.getElementById("message").value;
+      document.getElementById("reply").textContent =
+        "NOVA: I received your message — " + message;
+    }
+  </script>
+</body>
+</html>
