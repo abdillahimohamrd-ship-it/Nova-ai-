@@ -1,24 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NOVA AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <h1>🤖 NOVA AI</h1>
-  <p>Your AI assistant is coming online...</p>
 
-  <input id="message" placeholder="Ask NOVA anything">
-  <button onclick="send()">Send</button>
-
-  <p id="reply"></p>
-
-  <script>
-    function send() {
-      const message = document.getElementById("message").value;
-      document.getElementById("reply").textContent =
-        "NOVA: I received your message — " + message;
+  <style>
+    * {
+      box-sizing: border-box;
     }
-  </script>
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 700px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 18px;
+      text-align: center;
+      border-bottom: 1px solid #252d45;
+      background: #11182d;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: #9ca8c7;
+      font-size: 13px;
+    }
+
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 12px 15px;
+      margin-bottom: 12px;
+      border-radius: 16px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .nova {
+      background: #18213b;
+      margin-right: auto;
+    }
+
+    .user {
+      background: #3157d5;
+      margin-left: auto;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      background: #11182d;
+      border-top: 1px solid #252d45;
+    }
+
+    #message {
+      flex: 1;
+      padding: 13px;
+      border: 1px solid #303b5d;
+      border-radius: 12px;
+      background: #0b1020;
+      color: white;
+      outline: none;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 0 18px;
+      background: #3157d5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>🤖 NOVA AI</h1>
+    <p>Your personal AI assistant</p>
+  </header>
+
+  <div id="chat">
+    <div class="message nova">
+      Hello! 👋 I'm NOVA. Ask me something and I'll do my best to help.
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input
+      id="message"
+      type="text"
+      placeholder="Ask NOVA anything..."
+      autocomplete="off"
+    >
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+</div>
+
+<script>
+
+function addMessage(text, type) {
+  const chat = document.getElementById("chat");
+
+  const message = document.createElement("div");
+  message.className = "message " + type;
+  message.textContent = text;
+
+  chat.appendChild(message);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function getNovaResponse(text) {
+
+  const message = text.toLowerCase();
+
+  if (message.includes("hello") ||
+      message.includes("hi") ||
+      message.includes("hey")) {
+    return "Hello! 👋 I'm NOVA. What can I help you with?";
+  }
+
+  if (message.includes("your name") ||
+      message.includes("who are you")) {
+    return "I'm NOVA AI 🤖 — your personal AI assistant.";
+  }
+
+  if (message.includes("how are you")) {
+    return "I'm running perfectly! 🚀 What are we working on today?";
+  }
+
+  if (message.includes("money") ||
+      message.includes("business")) {
+    return "Building useful skills and solving real problems can help you create opportunities. 💡";
+  }
+
+  if (message.includes("code") ||
+      message.includes("coding")) {
+    return "I can help you learn coding step by step. 💻";
+  }
+
+  if (message.includes("nova")) {
+    return "NOVA is online. 🚀";
+  }
+
+  if (message.includes("thank")) {
+    return "You're welcome! 😎";
+  }
+
+  return "I received your message: \"" + text +
+         "\"\n\nI'm currently running in free demo mode. A real AI connection can be added later.";
+}
+
+function sendMessage() {
+
+  const input = document.getElementById("message");
+  const text = input.value.trim();
+
+  if (text === "") return;
+
+  addMessage(text, "user");
+
+  input.value = "";
+
+  setTimeout(function() {
+    const response = getNovaResponse(text);
+    addMessage(response, "nova");
+  }, 500);
+}
+
+document.getElementById("message").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});
+
+</script>
+
 </body>
 </html>
