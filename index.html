@@ -1,215 +1,452 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOVA AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA AI</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: white;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #080c18;
+  color: white;
+}
 
-    .app {
-      width: 100%;
-      max-width: 700px;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+.app {
+  max-width: 720px;
+  height: 100vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
 
-    header {
-      padding: 18px;
-      text-align: center;
-      border-bottom: 1px solid #252d45;
-      background: #11182d;
-    }
+header {
+  padding: 16px;
+  background: #10172b;
+  border-bottom: 1px solid #26304d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
+.logo h1 {
+  margin: 0;
+  font-size: 25px;
+}
 
-    header p {
-      margin: 5px 0 0;
-      color: #9ca8c7;
-      font-size: 13px;
-    }
+.logo p {
+  margin: 4px 0 0;
+  color: #9aa6c4;
+  font-size: 12px;
+}
 
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-    }
+#clearBtn {
+  background: transparent;
+  border: 1px solid #394565;
+  color: #c5cee4;
+  padding: 8px 10px;
+  border-radius: 9px;
+}
 
-    .message {
-      max-width: 85%;
-      padding: 12px 15px;
-      margin-bottom: 12px;
-      border-radius: 16px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+}
 
-    .nova {
-      background: #18213b;
-      margin-right: auto;
-    }
+.message {
+  max-width: 85%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
 
-    .user {
-      background: #3157d5;
-      margin-left: auto;
-    }
+.nova {
+  background: #18213b;
+  margin-right: auto;
+}
 
-    .input-area {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      background: #11182d;
-      border-top: 1px solid #252d45;
-    }
+.user {
+  background: #315bd6;
+  margin-left: auto;
+}
 
-    #message {
-      flex: 1;
-      padding: 13px;
-      border: 1px solid #303b5d;
-      border-radius: 12px;
-      background: #0b1020;
-      color: white;
-      outline: none;
-    }
+.typing {
+  color: #9da9c7;
+  font-style: italic;
+}
 
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 0 18px;
-      background: #3157d5;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.input-area {
+  padding: 12px;
+  display: flex;
+  gap: 8px;
+  background: #10172b;
+  border-top: 1px solid #26304d;
+}
 
-    button:active {
-      transform: scale(0.97);
-    }
-  </style>
+#message {
+  flex: 1;
+  min-width: 0;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid #34405f;
+  background: #080c18;
+  color: white;
+  outline: none;
+}
+
+#sendBtn {
+  border: none;
+  border-radius: 12px;
+  padding: 0 18px;
+  background: #315bd6;
+  color: white;
+  font-weight: bold;
+}
+
+#sendBtn:active {
+  transform: scale(.97);
+}
+
+@media(max-width: 500px) {
+  .message {
+    max-width: 92%;
+  }
+
+  #sendBtn {
+    padding: 0 14px;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <header>
+<header>
+  <div class="logo">
     <h1>🤖 NOVA AI</h1>
-    <p>Your personal AI assistant</p>
-  </header>
-
-  <div id="chat">
-    <div class="message nova">
-      Hello! 👋 I'm NOVA. Ask me something and I'll do my best to help.
-    </div>
+    <p>Your personal assistant</p>
   </div>
 
-  <div class="input-area">
-    <input
-      id="message"
-      type="text"
-      placeholder="Ask NOVA anything..."
-      autocomplete="off"
-    >
-    <button onclick="sendMessage()">Send</button>
-  </div>
+  <button id="clearBtn" onclick="clearChat()">Clear</button>
+</header>
+
+<div id="chat"></div>
+
+<div class="input-area">
+  <input
+    id="message"
+    type="text"
+    placeholder="Ask NOVA anything..."
+    autocomplete="off"
+  >
+  <button id="sendBtn" onclick="sendMessage()">Send</button>
+</div>
 
 </div>
 
 <script>
 
-function addMessage(text, type) {
-  const chat = document.getElementById("chat");
+const chat = document.getElementById("chat");
+const input = document.getElementById("message");
 
-  const message = document.createElement("div");
-  message.className = "message " + type;
-  message.textContent = text;
+let conversation = JSON.parse(
+  localStorage.getItem("novaConversation") || "[]"
+);
 
-  chat.appendChild(message);
+function saveConversation() {
+  localStorage.setItem(
+    "novaConversation",
+    JSON.stringify(conversation)
+  );
+}
+
+function displayMessage(text, type) {
+
+  const div = document.createElement("div");
+
+  div.className = "message " + type;
+
+  div.textContent = text;
+
+  chat.appendChild(div);
+
   chat.scrollTop = chat.scrollHeight;
 }
 
-function getNovaResponse(text) {
+function addMessage(text, type) {
 
-  const message = text.toLowerCase();
+  displayMessage(text, type);
 
-  if (message.includes("hello") ||
-      message.includes("hi") ||
-      message.includes("hey")) {
-    return "Hello! 👋 I'm NOVA. What can I help you with?";
+  conversation.push({
+    text: text,
+    type: type
+  });
+
+  saveConversation();
+}
+
+function loadChat() {
+
+  if (conversation.length === 0) {
+
+    addMessage(
+      "Hello! 👋 I'm NOVA.\n\nI can help with math, coding, writing, ideas, business questions and more. What would you like to do?",
+      "nova"
+    );
+
+    return;
   }
 
-  if (message.includes("your name") ||
-      message.includes("who are you")) {
-    return "I'm NOVA AI 🤖 — your personal AI assistant.";
+  conversation.forEach(message => {
+    displayMessage(message.text, message.type);
+  });
+}
+
+function thinking() {
+
+  const div = document.createElement("div");
+
+  div.id = "thinking";
+
+  div.className = "message nova typing";
+
+  div.textContent = "NOVA is thinking...";
+
+  chat.appendChild(div);
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function stopThinking() {
+
+  const element = document.getElementById("thinking");
+
+  if (element) {
+    element.remove();
+  }
+}
+
+function calculate(text) {
+
+  try {
+
+    let expression = text
+      .replace(/what is/gi, "")
+      .replace(/calculate/gi, "")
+      .replace(/plus/gi, "+")
+      .replace(/minus/gi, "-")
+      .replace(/times/gi, "*")
+      .replace(/multiplied by/gi, "*")
+      .replace(/divided by/gi, "/")
+      .replace(/x/gi, "*")
+      .trim();
+
+    if (!/^[0-9+\-*/().%\s]+$/.test(expression)) {
+      return null;
+    }
+
+    const result = Function(
+      '"use strict"; return (' + expression + ')'
+    )();
+
+    if (Number.isFinite(result)) {
+      return "The answer is **" + result + "**.";
+    }
+
+  } catch (error) {}
+
+  return null;
+}
+
+function getResponse(text) {
+
+  const lower = text.toLowerCase();
+
+  // Greetings
+  if (
+    lower === "hi" ||
+    lower === "hello" ||
+    lower === "hey" ||
+    lower.includes("good morning") ||
+    lower.includes("good evening")
+  ) {
+    return "Hey! 👋 I'm NOVA. What are we working on today?";
   }
 
-  if (message.includes("how are you")) {
-    return "I'm running perfectly! 🚀 What are we working on today?";
+  // Identity
+  if (
+    lower.includes("who are you") ||
+    lower.includes("your name")
+  ) {
+    return "I'm NOVA AI 🤖 — a free browser-based assistant you're building.";
   }
 
-  if (message.includes("money") ||
-      message.includes("business")) {
-    return "Building useful skills and solving real problems can help you create opportunities. 💡";
+  // Time
+  if (lower.includes("time")) {
+
+    return "The current time on your device is:\n" +
+      new Date().toLocaleTimeString();
   }
 
-  if (message.includes("code") ||
-      message.includes("coding")) {
-    return "I can help you learn coding step by step. 💻";
+  // Date
+  if (
+    lower.includes("today") &&
+    lower.includes("date")
+  ) {
+
+    return "Today's date is:\n" +
+      new Date().toLocaleDateString();
   }
 
-  if (message.includes("nova")) {
-    return "NOVA is online. 🚀";
+  // Math
+  if (
+    lower.includes("calculate") ||
+    lower.includes("what is")
+  ) {
+
+    const answer = calculate(text);
+
+    if (answer) {
+      return answer;
+    }
   }
 
-  if (message.includes("thank")) {
-    return "You're welcome! 😎";
+  // Coding
+  if (
+    lower.includes("coding") ||
+    lower.includes("programming") ||
+    lower.includes("javascript") ||
+    lower.includes("html")
+  ) {
+
+    return "💻 Coding mode activated!\n\n" +
+      "I can help you understand HTML, CSS and JavaScript. " +
+      "Tell me what you want to build.";
   }
 
-  return "I received your message: \"" + text +
-         "\"\n\nI'm currently running in free demo mode. A real AI connection can be added later.";
+  // Business
+  if (
+    lower.includes("business") ||
+    lower.includes("money") ||
+    lower.includes("entrepreneur")
+  ) {
+
+    return "💡 Business mode:\n\n" +
+      "Start by finding a real problem people have, " +
+      "create a simple solution, test it with real customers, " +
+      "and improve it from their feedback.";
+  }
+
+  // School
+  if (
+    lower.includes("school") ||
+    lower.includes("homework") ||
+    lower.includes("study")
+  ) {
+
+    return "📚 Study mode activated!\n\n" +
+      "Send me the question you're working on and I'll help you understand it step by step.";
+  }
+
+  // Writing
+  if (
+    lower.includes("write") ||
+    lower.includes("message") ||
+    lower.includes("essay")
+  ) {
+
+    return "✍️ Writing mode activated!\n\n" +
+      "Tell me what you want to write and the style you want — formal, friendly, funny, serious, or professional.";
+  }
+
+  // Motivation
+  if (
+    lower.includes("motivat") ||
+    lower.includes("sad") ||
+    lower.includes("tired")
+  ) {
+
+    return "Keep going. 💪\n\n" +
+      "You don't have to build everything in one day. " +
+      "One small step today can become something big later.";
+  }
+
+  // Thanks
+  if (
+    lower.includes("thank")
+  ) {
+
+    return "You're welcome! 😎🚀";
+  }
+
+  // Default
+  return "I understand you said:\n\n\"" +
+    text +
+    "\"\n\n" +
+    "I'm currently running without an external AI API, " +
+    "so my knowledge is limited. But we can keep upgrading NOVA.";
 }
 
 function sendMessage() {
 
-  const input = document.getElementById("message");
   const text = input.value.trim();
 
-  if (text === "") return;
+  if (!text) return;
 
   addMessage(text, "user");
 
   input.value = "";
 
-  setTimeout(function() {
-    const response = getNovaResponse(text);
+  thinking();
+
+  setTimeout(() => {
+
+    stopThinking();
+
+    const response = getResponse(text);
+
     addMessage(response, "nova");
-  }, 500);
+
+  }, 700);
 }
 
-document.getElementById("message").addEventListener("keydown", function(event) {
+function clearChat() {
+
+  localStorage.removeItem("novaConversation");
+
+  conversation = [];
+
+  chat.innerHTML = "";
+
+  addMessage(
+    "Chat cleared. 🧹\n\nHello again! I'm NOVA. How can I help?",
+    "nova"
+  );
+}
+
+input.addEventListener("keydown", function(event) {
+
   if (event.key === "Enter") {
     sendMessage();
   }
+
 });
+
+loadChat();
 
 </script>
 
 </body>
 </html>
+  
