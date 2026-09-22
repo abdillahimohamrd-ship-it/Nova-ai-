@@ -1,4 +1,4 @@
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,124 +6,106 @@
 <title>NOVA AI</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#080c18;
+  color:white;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #080c18;
-  color: white;
+.app{
+  max-width:720px;
+  height:100vh;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
 }
 
-.app {
-  max-width: 720px;
-  height: 100vh;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
+header{
+  padding:16px;
+  background:#10172b;
+  border-bottom:1px solid #26304d;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-header {
-  padding: 16px;
-  background: #10172b;
-  border-bottom: 1px solid #26304d;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+h1{
+  margin:0;
+  font-size:25px;
 }
 
-.logo h1 {
-  margin: 0;
-  font-size: 25px;
+.status{
+  color:#55e68a;
+  font-size:12px;
+  margin-top:4px;
 }
 
-.logo p {
-  margin: 4px 0 0;
-  color: #9aa6c4;
-  font-size: 12px;
+#clear{
+  background:transparent;
+  color:white;
+  border:1px solid #3b4868;
+  padding:8px 10px;
+  border-radius:9px;
 }
 
-#clearBtn {
-  background: transparent;
-  border: 1px solid #394565;
-  color: #c5cee4;
-  padding: 8px 10px;
-  border-radius: 9px;
+#chat{
+  flex:1;
+  overflow-y:auto;
+  padding:18px;
 }
 
-#chat {
-  flex: 1;
-  overflow-y: auto;
-  padding: 18px;
+.msg{
+  max-width:88%;
+  padding:13px 15px;
+  margin-bottom:12px;
+  border-radius:16px;
+  line-height:1.5;
+  white-space:pre-wrap;
 }
 
-.message {
-  max-width: 85%;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  border-radius: 16px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+.nova{
+  background:#18213b;
+  margin-right:auto;
 }
 
-.nova {
-  background: #18213b;
-  margin-right: auto;
+.user{
+  background:#315bd6;
+  margin-left:auto;
 }
 
-.user {
-  background: #315bd6;
-  margin-left: auto;
+.typing{
+  color:#9da9c7;
 }
 
-.typing {
-  color: #9da9c7;
-  font-style: italic;
+.input{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  background:#10172b;
+  border-top:1px solid #26304d;
 }
 
-.input-area {
-  padding: 12px;
-  display: flex;
-  gap: 8px;
-  background: #10172b;
-  border-top: 1px solid #26304d;
+#text{
+  flex:1;
+  min-width:0;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #34405f;
+  background:#080c18;
+  color:white;
+  outline:none;
 }
 
-#message {
-  flex: 1;
-  min-width: 0;
-  padding: 13px;
-  border-radius: 12px;
-  border: 1px solid #34405f;
-  background: #080c18;
-  color: white;
-  outline: none;
-}
-
-#sendBtn {
-  border: none;
-  border-radius: 12px;
-  padding: 0 18px;
-  background: #315bd6;
-  color: white;
-  font-weight: bold;
-}
-
-#sendBtn:active {
-  transform: scale(.97);
-}
-
-@media(max-width: 500px) {
-  .message {
-    max-width: 92%;
-  }
-
-  #sendBtn {
-    padding: 0 14px;
-  }
+#send{
+  border:0;
+  border-radius:12px;
+  padding:0 17px;
+  background:#315bd6;
+  color:white;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -133,320 +115,421 @@ header {
 <div class="app">
 
 <header>
-  <div class="logo">
+  <div>
     <h1>🤖 NOVA AI</h1>
-    <p>Your personal assistant</p>
+    <div class="status">● Online — Free Mode</div>
   </div>
 
-  <button id="clearBtn" onclick="clearChat()">Clear</button>
+  <button id="clear" onclick="clearChat()">Clear</button>
 </header>
 
 <div id="chat"></div>
 
-<div class="input-area">
-  <input
-    id="message"
-    type="text"
-    placeholder="Ask NOVA anything..."
-    autocomplete="off"
-  >
-  <button id="sendBtn" onclick="sendMessage()">Send</button>
+<div class="input">
+  <input id="text" placeholder="Ask NOVA anything..." autocomplete="off">
+  <button id="send" onclick="send()">Send</button>
 </div>
 
 </div>
 
 <script>
 
-const chat = document.getElementById("chat");
-const input = document.getElementById("message");
+const chat=document.getElementById("chat");
+const input=document.getElementById("text");
 
-let conversation = JSON.parse(
-  localStorage.getItem("novaConversation") || "[]"
+let history=JSON.parse(
+  localStorage.getItem("novaHistory")||"[]"
 );
 
-function saveConversation() {
+function save(){
   localStorage.setItem(
-    "novaConversation",
-    JSON.stringify(conversation)
+    "novaHistory",
+    JSON.stringify(history)
   );
 }
 
-function displayMessage(text, type) {
+function show(text,type,saveIt=true){
 
-  const div = document.createElement("div");
+  const div=document.createElement("div");
 
-  div.className = "message " + type;
-
-  div.textContent = text;
+  div.className="msg "+type;
+  div.textContent=text;
 
   chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
 
-  chat.scrollTop = chat.scrollHeight;
+  if(saveIt){
+    history.push({text,type});
+    save();
+  }
 }
 
-function addMessage(text, type) {
+function load(){
 
-  displayMessage(text, type);
+  if(history.length===0){
 
-  conversation.push({
-    text: text,
-    type: type
-  });
+    show(
+`Hello! 👋
 
-  saveConversation();
-}
+I'm NOVA AI.
 
-function loadChat() {
+I can help with:
+• Math
+• School
+• Coding
+• Writing
+• Business
+• Ideas
+• Motivation
+• General questions
+• Time and dates
 
-  if (conversation.length === 0) {
-
-    addMessage(
-      "Hello! 👋 I'm NOVA.\n\nI can help with math, coding, writing, ideas, business questions and more. What would you like to do?",
+What would you like to do?`,
       "nova"
     );
 
     return;
   }
 
-  conversation.forEach(message => {
-    displayMessage(message.text, message.type);
+  history.forEach(x=>{
+    show(x.text,x.type,false);
   });
 }
 
-function thinking() {
+function math(question){
 
-  const div = document.createElement("div");
+  let x=question
+    .toLowerCase()
+    .replace(/what is/g,"")
+    .replace(/calculate/g,"")
+    .replace(/equals/g,"")
+    .replace(/plus/g,"+")
+    .replace(/minus/g,"-")
+    .replace(/times/g,"*")
+    .replace(/multiplied by/g,"*")
+    .replace(/divided by/g,"/")
+    .replace(/over/g,"/")
+    .replace(/x/g,"*")
+    .trim();
 
-  div.id = "thinking";
+  if(!/^[0-9+\-*/().%\s]+$/.test(x))
+    return null;
 
-  div.className = "message nova typing";
+  try{
 
-  div.textContent = "NOVA is thinking...";
-
-  chat.appendChild(div);
-
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function stopThinking() {
-
-  const element = document.getElementById("thinking");
-
-  if (element) {
-    element.remove();
-  }
-}
-
-function calculate(text) {
-
-  try {
-
-    let expression = text
-      .replace(/what is/gi, "")
-      .replace(/calculate/gi, "")
-      .replace(/plus/gi, "+")
-      .replace(/minus/gi, "-")
-      .replace(/times/gi, "*")
-      .replace(/multiplied by/gi, "*")
-      .replace(/divided by/gi, "/")
-      .replace(/x/gi, "*")
-      .trim();
-
-    if (!/^[0-9+\-*/().%\s]+$/.test(expression)) {
-      return null;
-    }
-
-    const result = Function(
-      '"use strict"; return (' + expression + ')'
+    const answer=Function(
+      '"use strict";return ('+x+')'
     )();
 
-    if (Number.isFinite(result)) {
-      return "The answer is **" + result + "**.";
-    }
+    if(Number.isFinite(answer))
+      return "🧮 The answer is "+answer;
 
-  } catch (error) {}
+  }catch(e){}
 
   return null;
 }
 
-function getResponse(text) {
+function response(q){
 
-  const lower = text.toLowerCase();
+  const t=q.toLowerCase().trim();
 
-  // Greetings
-  if (
-    lower === "hi" ||
-    lower === "hello" ||
-    lower === "hey" ||
-    lower.includes("good morning") ||
-    lower.includes("good evening")
-  ) {
-    return "Hey! 👋 I'm NOVA. What are we working on today?";
-  }
+  /* GREETINGS */
 
-  // Identity
-  if (
-    lower.includes("who are you") ||
-    lower.includes("your name")
-  ) {
+  if(/^(hi|hello|hey|yo|sup)$/.test(t))
+    return "Hey! 👋 I'm NOVA. What's up?";
+
+  if(t.includes("good morning"))
+    return "Good morning! ☀️ Ready to build something today?";
+
+  if(t.includes("good night"))
+    return "Good night! 🌙 Keep moving toward your goals.";
+
+  /* IDENTITY */
+
+  if(t.includes("who are you"))
     return "I'm NOVA AI 🤖 — a free browser-based assistant you're building.";
+
+  if(t.includes("your name"))
+    return "My name is NOVA. 🚀";
+
+  if(t.includes("are you real"))
+    return "I'm software running in your browser. I'm not a human, but I'm here to help.";
+
+  /* TIME */
+
+  if(t.includes("time"))
+    return "🕐 Your device time is "+new Date().toLocaleTimeString();
+
+  if(t.includes("date"))
+    return "📅 Today's date is "+new Date().toLocaleDateString();
+
+  /* MATH */
+
+  if(
+    t.includes("calculate")||
+    t.includes("what is")||
+    /^[0-9+\-*/().%\s]+$/.test(t)
+  ){
+
+    const m=math(q);
+
+    if(m)return m;
   }
 
-  // Time
-  if (lower.includes("time")) {
+  /* SCHOOL */
 
-    return "The current time on your device is:\n" +
-      new Date().toLocaleTimeString();
-  }
+  if(
+    t.includes("homework")||
+    t.includes("school")||
+    t.includes("study")||
+    t.includes("exam")
+  )
+    return `📚 Study mode activated.
 
-  // Date
-  if (
-    lower.includes("today") &&
-    lower.includes("date")
-  ) {
+Send me the exact question you're working on.
 
-    return "Today's date is:\n" +
-      new Date().toLocaleDateString();
-  }
+I can help break a problem into smaller steps so you can understand it.`;
 
-  // Math
-  if (
-    lower.includes("calculate") ||
-    lower.includes("what is")
-  ) {
+  /* MATH SUBJECT */
 
-    const answer = calculate(text);
+  if(
+    t.includes("algebra")||
+    t.includes("equation")||
+    t.includes("geometry")
+  )
+    return `🧮 Math mode.
 
-    if (answer) {
-      return answer;
-    }
-  }
+Send me the exact problem.
 
-  // Coding
-  if (
-    lower.includes("coding") ||
-    lower.includes("programming") ||
-    lower.includes("javascript") ||
-    lower.includes("html")
-  ) {
+Example:
+2x + 5 = 15
 
-    return "💻 Coding mode activated!\n\n" +
-      "I can help you understand HTML, CSS and JavaScript. " +
-      "Tell me what you want to build.";
-  }
+I'll show you the steps.`;
 
-  // Business
-  if (
-    lower.includes("business") ||
-    lower.includes("money") ||
-    lower.includes("entrepreneur")
-  ) {
+  /* CODING */
 
-    return "💡 Business mode:\n\n" +
-      "Start by finding a real problem people have, " +
-      "create a simple solution, test it with real customers, " +
-      "and improve it from their feedback.";
-  }
+  if(
+    t.includes("code")||
+    t.includes("coding")||
+    t.includes("javascript")||
+    t.includes("html")||
+    t.includes("css")||
+    t.includes("website")
+  )
+    return `💻 Coding mode activated.
 
-  // School
-  if (
-    lower.includes("school") ||
-    lower.includes("homework") ||
-    lower.includes("study")
-  ) {
+I can help you build websites and learn HTML, CSS and JavaScript.
 
-    return "📚 Study mode activated!\n\n" +
-      "Send me the question you're working on and I'll help you understand it step by step.";
-  }
+Tell me what you want NOVA or another website to do.`;
 
-  // Writing
-  if (
-    lower.includes("write") ||
-    lower.includes("message") ||
-    lower.includes("essay")
-  ) {
+  /* BUSINESS */
 
-    return "✍️ Writing mode activated!\n\n" +
-      "Tell me what you want to write and the style you want — formal, friendly, funny, serious, or professional.";
-  }
+  if(
+    t.includes("business")||
+    t.includes("entrepreneur")||
+    t.includes("startup")||
+    t.includes("make money")
+  )
+    return `💼 Business mode.
 
-  // Motivation
-  if (
-    lower.includes("motivat") ||
-    lower.includes("sad") ||
-    lower.includes("tired")
-  ) {
+A simple approach:
 
-    return "Keep going. 💪\n\n" +
-      "You don't have to build everything in one day. " +
-      "One small step today can become something big later.";
-  }
+1. Find a problem.
+2. Find people who have that problem.
+3. Create a small solution.
+4. Test whether people will pay.
+5. Improve it using feedback.
 
-  // Thanks
-  if (
-    lower.includes("thank")
-  ) {
+Start small and learn as you go.`;
 
+  /* MONEY */
+
+  if(
+    t.includes("money")||
+    t.includes("rich")||
+    t.includes("wealth")
+  )
+    return `💰 Money mode.
+
+Focus on three things:
+
+• Learn valuable skills.
+• Solve problems people will pay for.
+• Save and reinvest part of what you earn.
+
+Avoid promises of "quick guaranteed money."`;
+
+  /* WRITING */
+
+  if(
+    t.includes("write")||
+    t.includes("essay")||
+    t.includes("paragraph")||
+    t.includes("rewrite")
+  )
+    return `✍️ Writing mode.
+
+Tell me:
+
+• What you're writing
+• Who it's for
+• The style you want
+
+For example:
+"Write a friendly message to my friend."`;
+
+  /* IDEAS */
+
+  if(
+    t.includes("idea")||
+    t.includes("ideas")||
+    t.includes("brainstorm")
+  )
+    return `💡 Idea mode.
+
+Try this:
+
+Pick a problem → think of 10 possible solutions → choose one → build the smallest version → test it.
+
+Tell me the topic and I'll help brainstorm.`;
+
+  /* MOTIVATION */
+
+  if(
+    t.includes("motivat")||
+    t.includes("give up")||
+    t.includes("sad")||
+    t.includes("tired")
+  )
+    return `💪 Keep going.
+
+You don't need to solve your whole future today.
+
+Take one useful step, learn from it, then take the next one.`;
+
+  /* FRIENDSHIP */
+
+  if(
+    t.includes("friend")||
+    t.includes("friendship")
+  )
+    return `🤝 Friendship mode.
+
+Good friendships usually need honesty, respect, communication and time.
+
+Tell me what happened and I'll help you think through it.`;
+
+  /* CONVERSATION */
+
+  if(
+    t.includes("bored")||
+    t.includes("fun")
+  )
+    return `😎 Let's fix that.
+
+We could:
+• Brainstorm a business
+• Build NOVA
+• Learn coding
+• Try a math challenge
+• Create a game idea
+• Plan a project`;
+
+  /* THANKS */
+
+  if(
+    t.includes("thank")||
+    t==="thanks"
+  )
     return "You're welcome! 😎🚀";
-  }
 
-  // Default
-  return "I understand you said:\n\n\"" +
-    text +
-    "\"\n\n" +
-    "I'm currently running without an external AI API, " +
-    "so my knowledge is limited. But we can keep upgrading NOVA.";
+  /* HELP */
+
+  if(
+    t==="help"||
+    t.includes("what can you do")
+  )
+    return `🤖 Here's what I can currently help with:
+
+🧮 Math
+📚 School
+💻 Coding
+💼 Business
+💰 Money ideas
+✍️ Writing
+💡 Brainstorming
+💪 Motivation
+🤝 Friendship
+🕐 Time/date
+💬 Conversation
+
+Try asking me something.`;
+
+  /* DEFAULT */
+
+  return `I hear you. 👂
+
+You said:
+"${q}"
+
+I'm running in free offline mode, so I don't have the full knowledge and reasoning of a cloud AI yet.
+
+Try asking about math, coding, school, business, writing, ideas, motivation or NOVA itself.`;
 }
 
-function sendMessage() {
+function send(){
 
-  const text = input.value.trim();
+  const q=input.value.trim();
 
-  if (!text) return;
+  if(!q)return;
 
-  addMessage(text, "user");
+  show(q,"user");
 
-  input.value = "";
+  input.value="";
 
-  thinking();
+  const typing=document.createElement("div");
 
-  setTimeout(() => {
+  typing.id="typing";
+  typing.className="msg nova typing";
+  typing.textContent="NOVA is thinking...";
 
-    stopThinking();
+  chat.appendChild(typing);
+  chat.scrollTop=chat.scrollHeight;
 
-    const response = getResponse(text);
+  setTimeout(()=>{
 
-    addMessage(response, "nova");
+    typing.remove();
 
-  }, 700);
+    show(response(q),"nova");
+
+  },500);
 }
 
-function clearChat() {
+function clearChat(){
 
-  localStorage.removeItem("novaConversation");
+  localStorage.removeItem("novaHistory");
 
-  conversation = [];
+  history=[];
 
-  chat.innerHTML = "";
+  chat.innerHTML="";
 
-  addMessage(
-    "Chat cleared. 🧹\n\nHello again! I'm NOVA. How can I help?",
+  show(
+    "Chat cleared. 🧹\n\nHello again! I'm NOVA. What should we work on?",
     "nova"
   );
 }
 
-input.addEventListener("keydown", function(event) {
+input.addEventListener("keydown",e=>{
 
-  if (event.key === "Enter") {
-    sendMessage();
-  }
+  if(e.key==="Enter")
+    send();
 
 });
 
-loadChat();
+load();
 
 </script>
 
 </body>
-</html>
+</html>        
   
