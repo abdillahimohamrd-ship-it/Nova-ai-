@@ -1,2 +1,26 @@
 # Nova-ai-
 Ai for everyone
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NOVA AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>🤖 NOVA AI</h1>
+  <p>Your AI assistant is coming online...</p>
+
+  <input id="message" placeholder="Ask NOVA anything">
+  <button onclick="send()">Send</button>
+
+  <p id="reply"></p>
+
+  <script>
+    function send() {
+      const message = document.getElementById("message").value;
+      document.getElementById("reply").textContent =
+        "NOVA: I received your message — " + message;
+    }
+  </script>
+</body>
+</html>
